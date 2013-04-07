@@ -11,4 +11,4 @@ for view in views:
     f = open(os.path.join(DIR, view))
     data = json.load(f)
     f.close()
-    dt.insert([{'column': column['name'], 'dataset': data['id']} for column in data['columns']])
+    dt.insert([{'column': column['name'], 'dataset': data['id']} for column in data['columns']], 'c')

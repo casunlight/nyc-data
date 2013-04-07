@@ -53,3 +53,8 @@ Download the metadata for each view.
 * Background texture
 * Colors
 * Footer stickiness
+
+## Useful SQL
+
+    -- Longitude and latitude
+    select distinct dataset from (select * from c where column like 'Longitude%' or column like 'Latitude%');
