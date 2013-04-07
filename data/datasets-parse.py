@@ -15,3 +15,6 @@ def main():
 def parse(html):
     'Get the viewids out.'
     return set(map(unicode, html.xpath('//tr[@itemtype="http://schema.org/Dataset"]/@data-viewid')))
+
+if __name__ == '__main__':
+    main()

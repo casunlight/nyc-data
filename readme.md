@@ -27,3 +27,16 @@ More about the API
     http://dev.socrata.com/docs/endpoints
 
 We can probably use the API directly in our apps.
+
+## Using
+Download the listings from Socrata.
+
+    ./datasets-download.sh
+
+Extract the viewids from them.
+
+    ./datasets-parse.py
+
+Download the metadata for each view.
+
+    ./views-download.sh
