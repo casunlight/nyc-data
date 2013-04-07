@@ -40,3 +40,16 @@ Extract the viewids from them.
 Download the metadata for each view.
 
     ./views-download.sh
+
+## Things to randomize
+
+* Tile server
+* Url file extension (php, asp, cgi)
+* Font size of title
+* App name (from a startup name generator)
+* App text (from the TED talk generator)
+* App logo (from a logo generator)
+* Typeface
+* Background texture
+* Colors
+* Footer stickiness
