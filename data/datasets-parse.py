@@ -6,13 +6,15 @@ DIR = os.path.join('downloads', 'datasets')
 
 def main():
     pages = filter(lambda page: '.html' == page[-5:], os.listdir(DIR))
+    viewids = set()
     for page in pages:
         html = lxml.html.parse(os.path.join(DIR, page))
-        parse(html)
-        break
+        viewids = viewids.union(parse(html))
+    print ' '.join(viewids)
 
 def parse(html):
-    print html.xpath('//tr[@itemtype="http://schema.org/Dataset"]')
+    'Get the viewids out.'
+    return set(map(unicode, html.xpath('//tr[@itemtype="http://schema.org/Dataset"]/@data-viewid')))
 
 #<tr itemscope="itemscope" itemtype="http://schema.org/Dataset" class="item collapsed  local" data-viewid="yc6c-pk2a">
 #                    <td class="index" scope="row">
