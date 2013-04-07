@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 mkdir -p downloads/views
 for viewid in $(./datasets-parse.py); do
