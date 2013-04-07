@@ -9,9 +9,10 @@ def main():
     for page in pages:
         html = lxml.html.parse(os.path.join(DIR, page))
         parse(html)
+        break
 
 def parse(html):
-    pass
+    print html.xpath('//tr[@itemtype="http://schema.org/Dataset"]')
 
 #<tr itemscope="itemscope" itemtype="http://schema.org/Dataset" class="item collapsed  local" data-viewid="yc6c-pk2a">
 #                    <td class="index" scope="row">
