@@ -64,3 +64,7 @@ Things with addresses
     cd data/downloads/rows
     head -n1 *|grep -i -B1 zip
 
+## Something
+Something gets the address and description from the metadata, then geocodes the addresses
+from the rows, caching the geocoder results, and returns a GeoJSON of the table, with the
+description concatenated in an appropriate place.
