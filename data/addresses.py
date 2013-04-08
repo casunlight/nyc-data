@@ -17,6 +17,23 @@ def main():
             'description': list(description(data['columns'])),
         }
 
+
+def geojson(viewid, address_columns, description_columns):
+    raise NotImplementedError('aoeu')
+    viewid.split('.')[0]
+    {
+        "type": "Feature",
+        "properties": {
+            "name": "Coors Field",
+            "amenity": "Baseball Stadium",
+            "popupContent": "This is where the Rockies play!",
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [-104.99404, 39.75621],
+        }
+    }
+
 def column_names(columns):
     'Column names'
     return [column['name'] for column in columns]
