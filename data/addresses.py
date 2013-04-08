@@ -25,10 +25,11 @@ def main():
             'description': list(description(data['columns'])),
         }
 
+        viewid = view.split('.')[0]
         if len(columns['address']) == 0:
             continue
-
-        viewid = view.split('.')[0]
+        elif not os.path.exists(os.path.join(ROWS_DIR, viewid + '.csv')):
+            continue
 
         data_out = list(geojson(viewid, columns['address'], columns['description']))
         if data_out != []:
