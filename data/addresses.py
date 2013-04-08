@@ -41,7 +41,7 @@ def geojson(viewid, address_columns, description_columns):
 
     for row in csv:
         def field_filter(column_names):
-            return ',\n'.join(filter(None, [row[a] for a in column_names]))
+            return ',\n'.join(filter(None, [row.get(a, '') for a in column_names]))
 
         address     = field_filter(address_columns)
         description = field_filter(description_columns)
