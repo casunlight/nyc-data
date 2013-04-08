@@ -54,7 +54,13 @@ Download the metadata for each view.
 * Colors
 * Footer stickiness
 
-## Useful SQL
+## Useful queries
+Longitude and latitude
 
-    -- Longitude and latitude
     select distinct dataset from (select * from c where column like 'Longitude%' or column like 'Latitude%');
+
+Things with addresses
+
+    cd data/downloads/rows
+    head -n1 *|grep -i -B1 zip
+
