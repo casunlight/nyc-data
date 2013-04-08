@@ -10,7 +10,7 @@ def main():
         f = open(os.path.join(DIR, view))
         data = json.load(f)
         f.close()
-        print address(data['columns'])
+        print list(address(data['columns']))
 
 def address(columns):
     'Get the address as a list of columns for geocoding.'
