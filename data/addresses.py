@@ -5,10 +5,16 @@ from urllib import urlencode
 from cache import get
 from read_csv import read_csv
 
-VIEWS_DIR = os.path.join('downloads', 'views')
-ROWS_DIR  = os.path.join('downloads', 'rows')
+VIEWS_DIR   = os.path.join('downloads', 'views')
+ROWS_DIR    = os.path.join('downloads', 'rows')
+GEOJSON_DIR = os.path.join('downloads', 'geojson')
 
 def main():
+    try:
+        os.mkdir(GEOJSON_DIR)
+    except OSError:
+        pass
+
     views = filter(lambda view: '.json' == view[-5:], os.listdir(VIEWS_DIR))
     for view in views:
         f = open(os.path.join(VIEWS_DIR, view))
@@ -18,18 +24,24 @@ def main():
             'address': list(address(data['columns'])),
             'description': list(description(data['columns'])),
         }
-        viewid = view.split('.')[0]
-        geojson(viewid, columns['address'], columns['description'])
 
+        if len(columns['address']) > 0:
+            continue
+
+        viewid = view.split('.')[0]
+
+        data_out = list(geojson(viewid, columns['address'], columns['description']))
+        f = open(os.path.join(GEOJSON_DIR, viewid + '.json'), 'w')
+        json.dump(data_out, f)
+        f.close
 
 def geojson(viewid, address_columns, description_columns):
     csv = read_csv(os.path.join(ROWS_DIR, viewid + '.csv'))
-
-    address = ',\n'.join([row[a] for a in address_columns])
-    description = ',\n'.join([row[d] for d in description_columns])
-    lng, lat = geocode(address)
-
     for row in csv:
+        address = ',\n'.join([row[a] for a in address_columns])
+        description = ',\n'.join([row[d] for d in description_columns])
+        lng, lat = geocode(address)
+
         yield {
             "type": "Feature",
             "properties": {
@@ -77,7 +89,5 @@ def geocode(address):
         return None
 
 if __name__ == '__main__':
-    print geocode('625 6th Avenue')
-    exit(0)
     main()
 
