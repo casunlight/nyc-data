@@ -7,7 +7,7 @@ from read_csv import read_csv
 
 VIEWS_DIR   = os.path.join('downloads', 'views')
 ROWS_DIR    = os.path.join('downloads', 'rows')
-GEOJSON_DIR = os.path.join('downloads', 'geojson')
+GEOJSON_DIR = 'geojson'
 
 def main():
     try:
