@@ -10,7 +10,10 @@ def main():
         f = open(os.path.join(DIR, view))
         data = json.load(f)
         f.close()
-        print list(address(data['columns']))
+        print {
+            'address': list(address(data['columns'])),
+            'description': list(description(data['columns'])),
+        }
 
 def column_names(columns):
     'Column names'
@@ -26,9 +29,17 @@ def address(columns):
     else:
         return []
 
+def is_description(column_name):
+    for word in {'street', 'address', 'zip', 'date'}:
+        if word in column_name.lower():
+            return False
+    else:
+        return True
+
 def description(columns):
     'Get a description as a list of columns for the pop-up box.'
-    filter(lambda c: not ( 'street' in c.lower() or 'address' in c.lower() or 'zip' in c.lower()), column_names(columns))
+    return filter(is_description, column_names(columns)) #[:3]
+
 
 if __name__ == '__main__':
     main()
