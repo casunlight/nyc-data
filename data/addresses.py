@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 import os
 import json
+from urllib import urlencode
+from urllib2 import urlopen
 
 DIR = os.path.join('downloads', 'views')
 
@@ -10,7 +12,7 @@ def main():
         f = open(os.path.join(DIR, view))
         data = json.load(f)
         f.close()
-        print {
+        columns = {
             'address': list(address(data['columns'])),
             'description': list(description(data['columns'])),
         }
@@ -41,6 +43,20 @@ def description(columns):
     return filter(is_description, column_names(columns)) #[:3]
 
 
+
+GEOCODE_URL = 'http://open.mapquestapi.com/nominatim/v1/search?format=json&%s'
+def geocode(address):
+    url = GEOCODE_URL % urlencode({'q': address + ', New York, NY'})
+    print url
+    handle = urlopen(url)
+    d = json.load(handle)
+    if len(d) > 0:
+        return d[0]['lon'], d[0]['lat']
+    else:
+        return None
+
 if __name__ == '__main__':
+    print geocode('625 6th Avenue')
+    exit(0)
     main()
 
