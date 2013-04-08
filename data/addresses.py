@@ -3,36 +3,43 @@ import os
 import json
 from urllib import urlencode
 from cache import get
+from read_csv import read_csv
 
-DIR = os.path.join('downloads', 'views')
+VIEWS_DIR = os.path.join('downloads', 'views')
+ROWS_DIR  = os.path.join('downloads', 'rows')
 
 def main():
-    views = filter(lambda view: '.json' == view[-5:], os.listdir(DIR))
+    views = filter(lambda view: '.json' == view[-5:], os.listdir(VIEWS_DIR))
     for view in views:
-        f = open(os.path.join(DIR, view))
+        f = open(os.path.join(VIEWS_DIR, view))
         data = json.load(f)
         f.close()
         columns = {
             'address': list(address(data['columns'])),
             'description': list(description(data['columns'])),
         }
+        viewid = view.split('.')[0]
+        geojson(viewid, columns['address'], columns['description'])
 
 
 def geojson(viewid, address_columns, description_columns):
-    raise NotImplementedError('aoeu')
-    viewid.split('.')[0]
-    {
-        "type": "Feature",
-        "properties": {
-            "name": "Coors Field",
-            "amenity": "Baseball Stadium",
-            "popupContent": "This is where the Rockies play!",
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [-104.99404, 39.75621],
+    csv = read_csv(os.path.join(ROWS_DIR, viewid + '.csv'))
+
+    address = ',\n'.join([row[a] for a in address_columns])
+    description = ',\n'.join([row[d] for d in description_columns])
+    lng, lat = geocode(address)
+
+    for row in csv:
+        yield {
+            "type": "Feature",
+            "properties": {
+                "popupContent": description,
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [lng, lat],
+            }
         }
-    }
 
 def column_names(columns):
     'Column names'
