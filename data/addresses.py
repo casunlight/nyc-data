@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 import os
-import lxml.html
+import json
 
 DIR = os.path.join('downloads', 'views')
 
