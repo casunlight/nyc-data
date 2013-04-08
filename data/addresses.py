@@ -42,12 +42,9 @@ def description(columns):
     'Get a description as a list of columns for the pop-up box.'
     return filter(is_description, column_names(columns)) #[:3]
 
-
-
 GEOCODE_URL = 'http://open.mapquestapi.com/nominatim/v1/search?format=json&%s'
 def geocode(address):
     url = GEOCODE_URL % urlencode({'q': address + ', New York, NY'})
-    print url
     handle = urlopen(url)
     d = json.load(handle)
     if len(d) > 0:
