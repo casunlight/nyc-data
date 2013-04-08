@@ -25,33 +25,41 @@ def main():
             'description': list(description(data['columns'])),
         }
 
-        if len(columns['address']) > 0:
+        if len(columns['address']) == 0:
             continue
 
         viewid = view.split('.')[0]
 
         data_out = list(geojson(viewid, columns['address'], columns['description']))
-        f = open(os.path.join(GEOJSON_DIR, viewid + '.json'), 'w')
-        json.dump(data_out, f)
-        f.close
+        if data_out != []:
+            f = open(os.path.join(GEOJSON_DIR, viewid + '.json'), 'w')
+            json.dump(data_out, f)
+            f.close
 
 def geojson(viewid, address_columns, description_columns):
     csv = read_csv(os.path.join(ROWS_DIR, viewid + '.csv'))
-    for row in csv:
-        address = ',\n'.join([row[a] for a in address_columns])
-        description = ',\n'.join([row[d] for d in description_columns])
-        lng, lat = geocode(address)
 
-        yield {
-            "type": "Feature",
-            "properties": {
-                "popupContent": description,
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [lng, lat],
+    for row in csv:
+        def field_filter(column_names):
+            return ',\n'.join(filter(None, [row[a] for a in column_names]))
+
+        address     = field_filter(address_columns)
+        description = field_filter(description_columns)
+
+        # Skip addresses that could not be geocoded.
+        coords = geocode(address)
+        if coords:
+            lng, lat = coords
+            yield {
+                "type": "Feature",
+                "properties": {
+                    "popupContent": description,
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [lng, lat],
+                }
             }
-        }
 
 def column_names(columns):
     'Column names'
@@ -80,6 +88,9 @@ def description(columns):
 
 GEOCODE_URL = 'http://open.mapquestapi.com/nominatim/v1/search?format=json&%s'
 def geocode(address):
+    if address == '':
+        return None
+
     url = GEOCODE_URL % urlencode({'q': address + ', New York, NY'})
     handle = get(url, cachedir = 'downloads')
     d = json.load(handle)
