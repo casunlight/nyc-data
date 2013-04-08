@@ -15,7 +15,7 @@ def main():
 def address(columns):
     'Get the address as a list of columns for geocoding.'
     for word in ['street', 'address', 'zip']:
-        for column in columns:
+        for column['name'] in columns:
             if word in column.lower():
                 yield street
 
