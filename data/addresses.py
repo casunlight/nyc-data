@@ -84,7 +84,7 @@ def geojson(viewid, address_columns, description_columns):
         elif not zipcode_column and annoying_get(row, street_column):
             address = '%s, New York, NY' % annoying_get(row, street_column)
             coords = geocode(address)
-        elif street_column in row and annoying_get(row, zipcode_column):
+        elif annoying_get(row, street_column) and annoying_get(row, zipcode_column):
             params = (annoying_get(row, street_column), annoying_get(row, zipcode_column))
             address = '%s, New York, NY, %s' % params
             coords = geocode(address)
