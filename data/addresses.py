@@ -50,6 +50,8 @@ def main():
         elif not os.path.exists(corresponding_csv):
             continue
 
+        print 'Creating geoJSON for %s' % view
+
         data_out = list(geojson(viewid, address_columns, description_columns))
         if data_out != []:
             f = open(os.path.join(GEOJSON_DIR, viewid + '.json'), 'w')
