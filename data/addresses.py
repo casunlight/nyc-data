@@ -16,6 +16,7 @@ LATLNG = re.compile(r'\(([0-9][0-9].[0-9]+), (-[0-9][0-9].[0-9]+)\)')
 from random import sample
 sxx4_xhzg = [tuple(map(float, [row['Longitude'], row['Latitude']])) for row in read_csv('downloads/rows/sxx4-xhzg.csv') if row['Latitude']]
 def random_lnglat():
+    print 'selecting a random coordinate'
     return sample(sxx4_xhzg, 1)[0]
 
 def main():
