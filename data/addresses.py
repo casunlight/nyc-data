@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 import os
+import re
 import json
 from urllib import urlencode
 from cache import get
@@ -8,6 +9,9 @@ from read_csv import read_csv
 VIEWS_DIR   = os.path.join('downloads', 'views')
 ROWS_DIR    = os.path.join('downloads', 'rows')
 GEOJSON_DIR = os.path.join('downloads', 'geojson')
+
+ANNOYING = re.compile(r'[^a-zA-Z]')
+LATLNG = re.compile(r'\(([0-9][0-9].[0-9]+), (-[0-9][0-9].[0-9]+)\)')
 
 def main():
     try:
@@ -45,10 +49,6 @@ def main():
             f = open(os.path.join(GEOJSON_DIR, viewid + '.json'), 'w')
             json.dump(data_out, f)
             f.close
-
-import re
-ANNOYING = re.compile(r'[^a-zA-Z]')
-LATLNG = re.compile(r'\(([0-9][0-9].[0-9]+), (-[0-9][0-9].[0-9]+)\)')
 
 def find_latlng_column(row):
     "Find the coordinates if they're already in there."
