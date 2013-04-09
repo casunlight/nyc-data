@@ -59,7 +59,7 @@ def find_latlng_column(row):
 
 def get_lnglat(latlng_cell):
     'Get the coordinates out of a cell.'
-    return tuple(map(float, re.findall(LATLNG, latlng_cell)[0]))
+    return tuple(reversed(map(float, re.findall(LATLNG, latlng_cell)[0])))
 
 def annoying_get(row, column_name):
     'Try simplifying the column names to deal with encoding.'
@@ -84,7 +84,7 @@ def geojson(viewid, address_columns, description_columns):
         elif not zipcode_column and annoying_get(row, street_column):
             address = '%s, New York, NY' % annoying_get(row, street_column)
             coords = geocode(address)
-        elif street_column in row and annoying_get(zipcode_column):
+        elif street_column in row and annoying_get(row, zipcode_column):
             params = (annoying_get(row, street_column), annoying_get(row, zipcode_column))
             address = '%s, New York, NY, %s' % params
             coords = geocode(address)
