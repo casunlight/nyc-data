@@ -13,6 +13,11 @@ GEOJSON_DIR = os.path.join('downloads', 'geojson')
 ANNOYING = re.compile(r'[^a-zA-Z]')
 LATLNG = re.compile(r'\(([0-9][0-9].[0-9]+), (-[0-9][0-9].[0-9]+)\)')
 
+from random import sample
+sxx4_xhzg = [tuple(map(float, [row['Longitude'], row['Latitude']])) for row in read_csv('downloads/rows/sxx4-xhzg.csv') if row['Latitude']]
+def random_lnglat():
+    return sample(sxx4_xhzg, 1)[0]
+
 def main():
     try:
         os.mkdir(GEOJSON_DIR)
@@ -89,7 +94,7 @@ def geojson(viewid, address_columns, description_columns):
             address = '%s, New York, NY, %s' % params
             coords = geocode(address)
         else:
-            raise NotImplementedError('Select a random point.')
+            coords = random_lnglat()
 
         description = ',\n'.join(filter(None, [row.get(a, '') for a in description_columns]))
 
