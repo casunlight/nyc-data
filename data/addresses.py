@@ -24,9 +24,20 @@ def main():
         description_columns = description(data['columns'])
 
         viewid = view.split('.')[0]
-        if address_columns == (None, None):
+        corresponding_csv = os.path.join(ROWS_DIR, viewid + '.csv')
+        corresponding_geojson = os.path.join(GEOJSON_DIR, viewid + '.json')
+
+        # Skip files that are done.
+        if os.path.exists(corresponding_geojson):
             continue
-        elif not os.path.exists(os.path.join(ROWS_DIR, viewid + '.csv')):
+
+        # Skip files without addresses.
+        elif address_columns == (None, None):
+            continue
+
+        # Skip files without corresponding csv files
+        # (I didn't download the largest ones.)
+        elif not os.path.exists(corresponding_csv):
             continue
 
         data_out = list(geojson(viewid, address_columns, description_columns))
@@ -35,25 +46,54 @@ def main():
             json.dump(data_out, f)
             f.close
 
+import re
+ANNOYING = re.compile(r'[^a-zA-Z]')
+LATLNG = re.compile(r'\(([0-9][0-9].[0-9]+), (-[0-9][0-9].[0-9]+)\)')
+
+def find_latlng_column(row):
+    "Find the coordinates if they're already in there."
+    for k, v in row.items():
+        if len(re.findall(LATLNG, v)) > 0:
+            return k
+    return None
+
+def get_lnglat(latlng_cell):
+    'Get the coordinates out of a cell.'
+    return tuple(map(float, re.findall(LATLNG, latlng_cell)[0]))
+
+def annoying_get(row, column_name):
+    'Try simplifying the column names to deal with encoding.'
+    for k,v in row.items():
+        if re.sub(ANNOYING, '', k) == re.sub(ANNOYING, '', column_name):
+            return v
+
+
 def geojson(viewid, address_columns, description_columns):
     csv = read_csv(os.path.join(ROWS_DIR, viewid + '.csv'))
 
     for row in csv:
 
+        latlng_column = find_latlng_column(row)
         street_column, zipcode_column = address_columns
-        if not street_column and zipcode_column in row:
-            address = 'New York, NY, %s' % row[zipcode_column]
-        elif not zipcode_column and street_column in row:
-            address = '%s, New York, NY' % row[street_column]
-        elif street_column in row and zipcode_column in row:
-            address = '%s, New York, NY, %s' % (row[street_column], row[zipcode_column])
+
+        if latlng_column:
+            coords = get_lnglat(row[latlng_column])
+        elif not street_column and annoying_get(row, zipcode_column):
+            address = 'New York, NY, %s' % annoying_get(row, zipcode_column)
+            coords = geocode(address)
+        elif not zipcode_column and annoying_get(row, street_column):
+            address = '%s, New York, NY' % annoying_get(row, street_column)
+            coords = geocode(address)
+        elif street_column in row and annoying_get(zipcode_column):
+            params = (annoying_get(row, street_column), annoying_get(row, zipcode_column))
+            address = '%s, New York, NY, %s' % params
+            coords = geocode(address)
         else:
             raise NotImplementedError('Select a random point.')
 
         description = ',\n'.join(filter(None, [row.get(a, '') for a in description_columns]))
 
         # Skip addresses that could not be geocoded.
-        coords = geocode(address)
         if coords:
             lng, lat = coords
             yield {
