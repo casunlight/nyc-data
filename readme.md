@@ -6,6 +6,7 @@ APIs
 
 * http://www.ykombinator.com/
 * http://www.namemesh.com/
+  * This plus csrf token plus cookie should do it: `http POST http://www.namemesh.com/company-name-generator/ word1=domestic,violence,nyc,health word2=cyclist,bridge,monthly fun=8`
 
 Other tools
 
