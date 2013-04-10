@@ -8,7 +8,7 @@ from read_csv import read_csv
 
 VIEWS_DIR   = os.path.join('downloads', 'views')
 ROWS_DIR    = os.path.join('downloads', 'rows')
-GEOJSON_DIR = os.path.join('downloads', 'geojson')
+GEOJSON_DIR = 'geojson'
 
 ANNOYING = re.compile(r'[^a-zA-Z]')
 LATLNG = re.compile(r'\(([0-9][0-9].[0-9]+), (-[0-9][0-9].[0-9]+)\)')
