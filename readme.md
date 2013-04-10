@@ -69,3 +69,10 @@ Things with addresses
 Something gets the address and description from the metadata, then geocodes the addresses
 from the rows, caching the geocoder results, and returns a GeoJSON of the table, with the
 description concatenated in an appropriate place.
+
+## Things to extract for the map
+
+* Longitude, latitude
+* Description (JSON list of all the strings? Biggest cells?)
+* Title
+* Contact information (Phone number? Website?)
