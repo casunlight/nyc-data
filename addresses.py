@@ -61,7 +61,7 @@ def main():
 def find_latlng_column(row):
     "Find the coordinates if they're already in there."
     for k, v in row.items():
-        if len(re.findall(LATLNG, v)) > 0:
+        if v and len(re.findall(LATLNG, v)) > 0:
             return k
     return None
 
